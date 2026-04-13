@@ -543,3 +543,66 @@
       });
     })();
 
+    (function () {
+      var form = document.querySelector('#contact .form-grid');
+      if (!form) {
+        return;
+      }
+
+      var recipient = 'jmlcabinetry@gmail.com';
+
+      function buildMailtoLink(name, email, message) {
+        var subject = 'New quote request from ' + name;
+        var lines = [
+          'Name: ' + name,
+          'Email: ' + email,
+          '',
+          'Project details:',
+          message,
+          '',
+          'Page: ' + window.location.href,
+          'Date: ' + new Date().toLocaleString()
+        ];
+
+        return 'mailto:' + recipient +
+          '?subject=' + encodeURIComponent(subject) +
+          '&body=' + encodeURIComponent(lines.join('\n'));
+      }
+
+      function openMailClient(mailtoLink) {
+        var tempLink = document.createElement('a');
+        tempLink.href = mailtoLink;
+        tempLink.style.display = 'none';
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        document.body.removeChild(tempLink);
+
+        // Fallback for browsers that ignore synthetic link clicks.
+        window.location.assign(mailtoLink);
+      }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        var nameInput = form.querySelector('#fullname');
+        var emailInput = form.querySelector('#email');
+        var messageInput = form.querySelector('#message');
+
+        var name = nameInput ? nameInput.value.trim() : '';
+        var email = emailInput ? emailInput.value.trim() : '';
+        var message = messageInput ? messageInput.value.trim() : '';
+
+        if (!name || !email || !message) {
+          form.reportValidity();
+          return;
+        }
+
+        openMailClient(buildMailtoLink(name, email, message));
+      });
+    })();
+
