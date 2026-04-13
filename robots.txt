@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Block internal/system paths if they appear in the future
+Disallow: /cgi-bin/
+Disallow: /tmp/
+
+Sitemap: https://www.jmlcabinets.com/sitemap.xml
